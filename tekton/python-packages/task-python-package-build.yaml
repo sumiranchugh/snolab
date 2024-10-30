@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: python-packages
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: python-packages
+spec:
+  params:
+  - name: PYTHON_PACKAGE_BUILD_IMAGE
+    type: string
+    description: "base image to download python files to"
+    default: "registry.redhat.io/rhel9/python-311@sha256:39bd10c0d80a127280095ff352f8a6881e61c39c2edbbdf5206e6508adc3b8e7"
+  - name: BUILD_EXTRA_ARGS
+    description: Extra parameters passed for the build command when building images.
+    default: ""
+  - name: TLSVERIFY
+    description: Verify the TLS on the registry endpoint
+    default: "true"
+  - name: REQUIREMENTS_DIR
+    description: Extra parameters passed for the push command when pushing images.
+    type: string
+    default: ""
+  workspaces:
+  - name: packages
+  steps:
+  - name: download
+    image: $(params.PYTHON_PACKAGE_BUILD_IMAGE)
+    workingDir: $(workspaces.source.path)/$(params.REQUIREMENTS_DIR)
+    script: |
+      pip3 download requirements.txt
+    volumeMounts:
+    - name: $(workspaces.packages.volume)
+      mountPath: /site-packages

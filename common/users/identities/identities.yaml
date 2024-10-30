@@ -1,0 +1,23 @@
+apiVersion: v1
+items:
+- apiVersion: user.openshift.io/v1
+  kind: Identity
+  metadata:
+    name: googleidp:101336022754752329105
+  providerName: googleidp
+  providerUserName: "101336022754752329105"
+  user:
+    name: suchugh
+    uid: 8fc95a89-4e70-499f-a4b0-a07945aee949
+- apiVersion: user.openshift.io/v1
+  kind: Identity
+  metadata:
+    name: googleidp:109748953970765505274
+  providerName: googleidp
+  providerUserName: "109748953970765505274"
+  user:
+    name: sumiranchugh
+    uid: 6b328511-4e68-44d4-86bb-ca50bba4704b    
+kind: List
+metadata:
+  resourceVersion: ""

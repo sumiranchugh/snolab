@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: python-packages
+spec:
+  params:
+    - name: github-repo-revision
+      type: string
+      default: main
+    - name: github-repo-url
+      type: string
+      default: https://github.com/sumiranchugh/snolab.git
+  workspaces:
+    - name: source
+    - name: packages
+  tasks:
+  - name: clone-sources
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    params:
+      - name: url
+        value: '$(params.github-repo-url)'
+      - name: revision
+        value: '$(params.github-repo-revision)'
+      - name: deleteExisting
+        value: 'true'
+    workspaces:
+      - name: output
+        workspace: source
+
+  - name: prepare-packages
+    taskRef:
+      name: python-packages
+    runAfter:
+    - clone-sources
+    workspaces:
+      - name: packages
+        workspace: packages
+
